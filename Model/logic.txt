@@ -1,0 +1,218 @@
+1”-1 ½” of water twice per week (It could take between 15 and 30 minutes depending on the type of sprinkler you use.)
+When to turn the system Off based on:
+Grass Land Area: Area * (1+1.5)/2 = Volume of water.
+Flow rate * (pipe Circumfrence) = Volume of Water
+
+Water deeply 2-3 times per week
+Logging Last time grass was watered
+System check to see when was the last time grass was watered
+
+if now - last time > 48 hours
+turn water on
+
+System checks every day at 6am and 7pm for most efficient use of water
+factors in
+- less wind,
+- less hot sun,
+- lawn has a full day to dry
+
+Network connection would be nice so you could manually activate things or change the program on the fly (say, in a drought or rough winter, rainy week, etc).
+You could hook into a weather service and have it modify the watering based on the expected temperature or rainfall.
+Data From: http://openweathermap.org/api
+Options to execute Different Code: of your phone
+
+Soil Sensor: https://www.adafruit.com/products/1298
+Temp/Humidity Sensor: Bought
+Logging Data: To a file using Sense Hat Data Logger
+sun sensor?
+
+
+
+Purpose of forcast: check to see if it will rain in the check if wil rain the folllowing day, no need to check any further as the system will execute everyday and keep updating
+
+what if the system misses a day of watering and it did not rain
+
+
+
+Program---------------------------------------------------------
+
+Auto Script:
+
+Inputs:
+ - Lawn Size
+ - Pipe Diameter
+ - Weather Predictions
+  - 3 Hour : Delays Watering if rain expected
+  - 24 Hour : Reduced Watering if rain expected
+  - 5 Day : Optimizes Watering if rain expected
+ - Soil Moisture
+ - Soil Temperature
+ - Air Temperature
+ - Air Humidity
+
+Outputs:
+ - Data Stored on MySql Table
+ - Frequecy: 1 min
+
+lawn Name  | Water m^3 | Soil Moisture | Soil Temperature | Air Temperature | Air Humidity | Current Temp | Current Humidity | Current Clouds (last 3 hour) | Current Rain(last 3 hour) | 3 Hour Prediction | 24 Hour Pridiction | 5 Day Prediction | 24 Hour Prediciton | System Status | Sunrise Time | Sunset Time
+
+Logic:
+
+Call Weather Data:
+
+Record Current Time
+
+Get Soil Moisture
+Get Soil Temp
+Get Air Temp
+Get Air Humidity
+
+Call Api to get the Data: Temp, {Sunny, Cloudy, Raining}, Prediction: 3 hour and 5 day {Temp, {Sunny, Cloudy, Raining}}
+
+
+LogData(){
+	Record Data to MySql Table: lawn Name  | Water m^3 | Soil Moisture | Soil Temperature | Air Temperature | Air Humidity | Current Weather | 3 Hour Prediction | 24 Hour Pridiction | 5 Day Prediction | 24 Hour Prediciton | System Status | Sunrise Time | Sunset Time | System Status
+}
+
+
+import pymysql.cursors
+
+class RecordData:
+	def __init__(self, host="", database="", user="", password=""):
+
+
+
+    def mysqlConnection(self):
+        connection = pymysql.connector.connect(host="turf.cg0fwnlqgdqk.us-west-2.rds.amazonaws.com",
+                                           user="turfswach",
+                                           password="shriyantra",
+                                           db="turf",
+                                           charset='utf8mb4',
+                                           cursorclass=pymysql.cursors.DictCursor)
+        if connection.isconnected():
+        return connection
+    else:
+        print("Connection expection error")
+
+
+    def logWeatherDataforLawn(self, data):
+        connection = self.mysqlConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "Insert INTO weatherData" \
+                      "(city, country, currentTemp, currentMaxTemp, currentMinTemp, " \
+                      "currentHumidity, currentCloudiness, hoursRain, rainInLastXHour," \
+                      "hoursSnow, snowInLastXHour, totalRainInNext24Hour, soilMoisture, " \
+                      "soilTemp, sunrise, sunset)" \
+                      "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                arguments = (data.city, data.country, data.currentTemp, data.currentMaxTemp, data.currentMinTemp,
+                             data.currentHumidity, data.currentCloudiness, data.rainHour, data.rainInLastXHour,
+                             data.hoursSnow, data.snowInLastXHour, data.totalRainInNext24Hour, data.soilMoisture,
+                             data.soilTemp, data.sunrise, data.sunset)
+                cursor.execute(sql, arguments)
+                connection.commit()
+        finally:
+            connection.close()
+
+    def logWeatherDataforLawn(self):
+        connection = self.mysqlConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "Insert INTO lawnData" \
+                      "(lawnID, area, waterThickness, waterVolume, pipeCircumfrence, systemStatus)" \
+                      "values (%s, %s, %s, %s, %s, %s)"
+                cursor.execute(sql, (1 , area, waterThickness, waterVolume, pipeCircumfrence, systemStatus))
+                connection.commit()
+        finally:
+            connection.close()
+
+
+def createLawn():
+    connection = self.mysqlConnection()
+    try:
+        with connection.cursor() as cursor:
+            sql = "Insert INTO lawn" \
+                  "(city, country, currentUnixTime,  waterThickness, waterVolumeFront, waterVolumeBack, " \
+                  "pipeCircumfrence, systemStatusFrontyard, systemStatusBackyard)" \
+                  "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        arguments = (
+            currentUnixTime, frontyardArea, backyardArea, waterThickness, waterVolumeFront, waterVolumeBack,
+            pipeCircumfrence,
+            systemStatusFrontyard, systemStatusBackyard)
+    cursor.execute(sql, arguments)
+    connection.commit()
+
+finally:
+connection.close()
+
+
+	def pullLastTwoDaysData(self):
+		connection = self.mysqlConnection()
+		try:
+			with connection.cursor() as cursor:
+				sql  = "Select name, city, coutry from 'lawn'"
+				cursor.execute(sql)
+				result = cursor.fetchtone()
+				print(result)
+		finally:
+			connection.close()
+
+	# Uses the SQL server to check total rain volume in the
+	def didItRainInLast24Hours():
+		sql = ""
+		return
+
+	#only need to call these function at 6AM and 7PM local time
+	def lastTimeLawnsWatered():
+		print "I check last time the lawn was watered"
+		return
+
+def main():
+    lawn = LawnProperties("Brampton Test Lawn", 10, 10, 0.75)
+    autoWater = AutoWatering()
+    if autoWater.shouldWater():
+        print("System Running")
+    else:
+        print("System Not Running")
+
+main()
+
+
+'''
+++++++++++++++++++++
++ LOGGING THE DATA +
+++++++++++++++++++++
+
+Data to Log into the server 19 variables for the weather provider
+
+- city
+- country
+- currentTemp
+- currentMaxTemp
+- currentMinTemp
+- currentHumidity
+- currentCloudiness
+- hoursRain
+- rainInLastXHour
+- hoursSnow
+- snowInLastXHour
+- rainInNext24Hour
+- totalRainInNext24Hour
+- systemStatus
+- soilMoisture
+- soilTemp
+- sunrise
+- sunset
+- currentUnixTime
+
+Data to Log into the server 19 variables for the each lawn in the system
+
+- frontyardArea
+- backyardArea
+- waterThickness
+- waterVolumeFront
+- waterVolumeBack
+- pipeCircumfrence
+- systemStatusFrontyard
+- systemStatusBackyard
+'''
