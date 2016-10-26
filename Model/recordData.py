@@ -9,8 +9,8 @@ class RecordData:
         connection = ""
         try:
             connection = pymysql.connect(host="turf.cg0fwnlqgdqk.us-west-2.rds.amazonaws.com",
-                                                   user="turfswach",
-                                                   password="shriyantra",
+                                                   user="",
+                                                   password="",
                                                    db="turf",
                                                    charset='utf8mb4',
                                                    cursorclass=pymysql.cursors.DictCursor)
