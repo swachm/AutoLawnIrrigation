@@ -83,10 +83,10 @@ class RecordData:
 
 
     def mysqlConnection(self):
-        connection = pymysql.connector.connect(host="turf.cg0fwnlqgdqk.us-west-2.rds.amazonaws.com",
-                                           user="turfswach",
-                                           password="shriyantra",
-                                           db="turf",
+        connection = pymysql.connector.connect(host="",
+                                           user="",
+                                           password="",
+                                           db="",
                                            charset='utf8mb4',
                                            cursorclass=pymysql.cursors.DictCursor)
         if connection.isconnected():
