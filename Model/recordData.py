@@ -8,7 +8,7 @@ class RecordData:
     def mysqlConnection(self):
         connection = ""
         try:
-            connection = pymysql.connect(host="turf.cg0fwnlqgdqk.us-west-2.rds.amazonaws.com",
+            connection = pymysql.connect(host="",
                                                    user="",
                                                    password="",
                                                    db="turf",
