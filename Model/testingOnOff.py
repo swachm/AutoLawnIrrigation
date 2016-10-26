@@ -5,10 +5,10 @@ import pymysql.cursors
 class test():
 
     def mysqlConnection(self):
-        connection = pymysql.connect(host="turf.cg0fwnlqgdqk.us-west-2.rds.amazonaws.com",
+        connection = pymysql.connect(host="",
                                          user="turfswach",
-                                         password="shriyantra",
-                                         db="turf",
+                                         password="",
+                                         db="",
                                          charset='utf8mb4',
                                          cursorclass=pymysql.cursors.DictCursor)
         if connection:
