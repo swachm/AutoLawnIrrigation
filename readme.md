@@ -1,3 +1,5 @@
+# Auto Lawn Irrigation System
+
 This hack is designed to water the lawn based on the conditions: time of the day, city, and country. 
 The software uses an algorithm to determine the wheater to water the lawn based on soil moisture and weather conditions while minimizing the use of water and maintian health of the lawn.
 
