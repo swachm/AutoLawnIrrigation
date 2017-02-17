@@ -1,5 +1,5 @@
 This hack is designed to water the lawn based on the conditions: time of the day, city, and country. 
-The software uses an algorithm to determine the wheater to water the lawn based on soil moisture and weather conditions. 
+The software uses an algorithm to determine the wheater to water the lawn based on soil moisture and weather conditions while minimizing the use of water and maintian health of the lawn.
 
 The original idea was to get an user input through an App which would use blutooth to pair the system with home wifi.
 
